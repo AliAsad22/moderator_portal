@@ -23,10 +23,6 @@
         .nav-link.active svg {
             color: #6D28D9; /* purple-700 */
         }
-        .filter-btn.active {
-            background-color: #6D28D9; /* purple-700 */
-            color: white;
-        }
         /* Style for date input placeholder */
         input[type="date"]::-webkit-calendar-picker-indicator {
             opacity: 0.5;
@@ -35,6 +31,10 @@
         .modal-backdrop {
             background-color: rgba(0, 0, 0, 0.75);
         }
+        .status-btn-active-present { background-color: #D1FAE5; color: #065F46; }
+        .status-btn-active-absent { background-color: #FEE2E2; color: #991B1B; }
+        .status-btn-active-late { background-color: #FEF3C7; color: #92400E; }
+        .status-btn-active-excused { background-color: #DBEAFE; color: #1E40AF; }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-800">
@@ -54,10 +54,6 @@
                  <a href="#" id="nav-dashboard" class="nav-link flex items-center px-4 py-2.5 text-gray-700 hover:bg-gray-100 rounded-lg">
                     <svg class="h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" /></svg>
                     <span class="ml-3">Dashboard</span>
-                </a>
-                 <a href="#" id="nav-moderation" class="nav-link flex items-center px-4 py-2.5 text-gray-700 hover:bg-gray-100 rounded-lg">
-                    <svg class="h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    <span class="ml-3">External Activities</span>
                 </a>
                 <a href="#" id="nav-attendance" class="nav-link flex items-center px-4 py-2.5 text-gray-700 hover:bg-gray-100 rounded-lg">
                     <svg class="h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 4.5l7.5 7.5-7.5 7.5m-6-15l7.5 7.5-7.5 7.5" /></svg>
@@ -82,73 +78,10 @@
         <!-- Main Content -->
         <main class="flex-1 p-6 sm:p-8 md:p-10 overflow-y-auto">
             <div class="max-w-7xl mx-auto">
-                <!-- View: Dashboard -->
-                <div id="view-dashboard">
-                    <h1 class="text-3xl font-bold text-gray-900">Moderator Dashboard</h1>
-                    <p class="text-gray-600 mt-1">Welcome back, John. Here's what's on your plate today.</p>
-                    <div class="mt-8">
-                        <div class="relative"><div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"><svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"></path></svg></div><input type="text" placeholder="Search for a student, session, or activity..." class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-purple-500 focus:border-purple-500 text-base shadow-sm"></div>
-                    </div>
-                    <div class="mt-10">
-                        <h2 class="text-xl font-bold text-gray-900 mb-4">Action Items</h2>
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200"><div class="flex justify-between items-center"><h3 class="font-semibold text-lg">Pending Attendance</h3><span id="pending-attendance-count" class="bg-red-100 text-red-800 text-sm font-bold px-2.5 py-1 rounded-full"></span></div><p class="text-sm text-gray-500 mt-1">Sessions from yesterday that need attendance marked.</p><div id="pending-attendance-list" class="mt-4 space-y-3"></div></div>
-                            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200"><div class="flex justify-between items-center"><h3 class="font-semibold text-lg">Pending Moderations</h3><span id="pending-moderations-count" class="bg-yellow-100 text-yellow-800 text-sm font-bold px-2.5 py-1 rounded-full"></span></div><p class="text-sm text-gray-500 mt-1">External activities awaiting your review.</p><div id="pending-moderations-list" class="mt-4 space-y-3"></div></div>
-                        </div>
-                    </div>
-                    <div class="mt-10">
-                        <h2 class="text-xl font-bold text-gray-900 mb-4">Upcoming Sessions</h2>
-                        <div id="upcoming-sessions-list" class="space-y-4"></div>
-                    </div>
-                </div>
-
-                <!-- View: External Activity Moderation -->
-                <div id="view-moderation" class="hidden">
-                     <h1 class="text-3xl font-bold text-gray-900">External Activities</h1>
-                     <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                        <div class="bg-white p-5 rounded-xl shadow-sm border flex items-center space-x-4"><div class="bg-yellow-100 p-3 rounded-full"><svg class="h-6 w-6 text-yellow-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div><div><p class="text-sm text-gray-500">Pending</p><p id="mod-stat-pending" class="text-2xl font-bold text-gray-900"></p></div></div>
-                        <div class="bg-white p-5 rounded-xl shadow-sm border flex items-center space-x-4"><div class="bg-green-100 p-3 rounded-full"><svg class="h-6 w-6 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div><div><p class="text-sm text-gray-500">Approved</p><p id="mod-stat-approved" class="text-2xl font-bold text-gray-900"></p></div></div>
-                        <div class="bg-white p-5 rounded-xl shadow-sm border flex items-center space-x-4"><div class="bg-red-100 p-3 rounded-full"><svg class="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div><div><p class="text-sm text-gray-500">Rejected</p><p id="mod-stat-rejected" class="text-2xl font-bold text-gray-900"></p></div></div>
-                        <div class="bg-white p-5 rounded-xl shadow-sm border flex items-center space-x-4"><div class="bg-purple-100 p-3 rounded-full"><svg class="h-6 w-6 text-purple-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z"></path></svg></div><div><p class="text-sm text-gray-500">Total</p><p id="mod-stat-total" class="text-2xl font-bold text-gray-900"></p></div></div>
-                     </div>
-                     <div class="bg-white p-4 rounded-xl shadow-sm border mb-6"><div class="flex flex-col sm:flex-row justify-between items-center gap-4"><div class="relative w-full sm:max-w-xs"><div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"></path></svg></div><input type="text" id="mod-search-input" placeholder="Search Student" class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"></div><div class="flex items-center space-x-1 bg-gray-100 p-1 rounded-lg"><button id="mod-filter-all" class="filter-btn px-4 py-1.5 rounded-md text-sm transition text-gray-600">All Students</button><button id="mod-filter-pending" class="filter-btn px-4 py-1.5 rounded-md text-sm transition text-gray-600">Needs Moderation</button></div></div></div>
-                     <div id="moderation-student-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"></div>
-                </div>
-                
-                <!-- View: Attendance -->
-                <div id="view-attendance" class="hidden">
-                    <div class="flex justify-between items-center mb-8">
-                        <h1 class="text-3xl font-bold text-gray-900">Sessions</h1>
-                        <span id="att-total-count" class="bg-gray-200 text-gray-800 text-sm font-semibold px-3 py-1 rounded-full"></span>
-                    </div>
-                    <div class="bg-white p-6 rounded-xl shadow-sm border mb-6">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4">
-                            <div>
-                                <label for="att-search-input" class="text-sm font-medium text-gray-700">Search Sessions</label>
-                                <input type="text" id="att-search-input" placeholder="Search by title..." class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500">
-                            </div>
-                            <div>
-                                <label for="att-date-input" class="text-sm font-medium text-gray-700">Filter by Date</label>
-                                <input type="date" id="att-date-input" class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 text-gray-500">
-                            </div>
-                            <div>
-                                <label for="att-status-select" class="text-sm font-medium text-gray-700">Status</label>
-                                <select id="att-status-select" class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500">
-                                    <option value="all">All Sessions</option>
-                                    <option value="pending">Pending Attendance</option>
-                                    <option value="completed">Completed</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="attendance-page-list" class="space-y-4"></div>
-                </div>
-
-                <!-- View: Calendar -->
-                <div id="view-calendar" class="hidden">
-                    <div class="flex items-center justify-between mb-8"><div><h1 class="text-3xl font-bold text-gray-900" id="calendar-month-year"></h1><p class="text-gray-600 mt-1">A monthly overview of all CCA sessions.</p></div><div class="flex items-center space-x-2"><button id="prev-month-btn" class="p-2 rounded-lg hover:bg-gray-100"><svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"></path></svg></button><button id="next-month-btn" class="p-2 rounded-lg hover:bg-gray-100"><svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"></path></svg></button></div></div>
-                    <div class="bg-white p-6 rounded-xl shadow-sm border"><div class="grid grid-cols-7 gap-px text-center text-sm font-semibold text-gray-600 mb-2"><div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div></div><div id="calendar-grid" class="grid grid-cols-7 gap-px"></div></div>
-                </div>
+                <!-- View Containers -->
+                <div id="view-dashboard"></div>
+                <div id="view-attendance" class="hidden"></div>
+                <div id="view-calendar" class="hidden"></div>
             </div>
         </main>
     </div>
@@ -163,9 +96,16 @@
                     <h2 id="modal-session-title" class="text-2xl font-bold text-gray-900"></h2>
                     <p id="modal-session-details" class="text-gray-500 mt-1"></p>
                 </div>
-                <button onclick="closeAttendanceModal()" class="p-2 rounded-full hover:bg-gray-100">
-                    <svg class="h-6 w-6 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
-                </button>
+                <div class="relative">
+                    <button onclick="toggleDropdown('session-download-dropdown')" class="flex items-center space-x-2 bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg text-sm font-semibold">
+                        <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
+                        <span>Download</span>
+                    </button>
+                    <div id="session-download-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border">
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Download as CSV</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Download as PDF</a>
+                    </div>
+                </div>
             </div>
             <!-- Modal Tabs -->
             <div class="p-4 border-b">
@@ -210,37 +150,116 @@
 
     <script>
         // --- MOCK DATA ---
-        const allModerationData = [ { id: 1, studentId: 's1', studentName: 'Amelia Johnson', studentHandle: '@amelia', grade: 'Grade 10', activity: 'Online Python Course', status: 'pending' }, { id: 2, studentId: 's2', studentName: 'Benjamin Carter', studentHandle: '@ben', grade: 'Grade 9', activity: 'Community Volunteering at SPCA', status: 'pending' }, { id: 3, studentId: 's3', studentName: 'Sophia Rodriguez', studentHandle: '@sophia', grade: 'Grade 11', activity: 'Digital Art Workshop by Adobe', status: 'pending' }, { id: 4, studentId: 's1', studentName: 'Amelia Johnson', studentHandle: '@amelia', grade: 'Grade 10', activity: 'Summer Code Camp', status: 'approved' }, { id: 5, studentId: 's2', studentName: 'Benjamin Carter', studentHandle: '@ben', grade: 'Grade 9', activity: 'First Aid Certification', status: 'approved' }, { id: 6, studentId: 's4', studentName: 'Liam Goldberg', studentHandle: '@liam', grade: 'Grade 12', activity: 'Varsity Math Competition', status: 'approved' }, { id: 7, studentId: 's4', studentName: 'Liam Goldberg', studentHandle: '@liam', grade: 'Grade 12', activity: 'Music Theory Exam', status: 'rejected' }, ];
         const allSessionsData = [ { id: 1, name: 'Robotics Club', time: '3:00 PM', date: '2025-07-18', location: 'Tech Lab 1', students: 15, attendance: 'completed' }, { id: 2, name: 'Debate Team Practice', time: '3:30 PM', date: '2025-07-18', location: 'Room 204', students: 22, attendance: 'completed' }, { id: 3, name: 'Photography Club', time: '4:00 PM', date: '2025-07-19', location: 'Art Studio', students: 18, attendance: 'pending' }, { id: 4, name: 'Advanced Chess Strategy', time: '4:00 PM', date: '2025-07-17', location: 'Library', students: 12, attendance: 'pending' }, { id: 5, name: 'Creative Writing Workshop', time: '4:30 PM', date: '2025-07-17', location: 'Room 301', students: 16, attendance: 'pending' }, { id: 6, name: 'Robotics Club', time: '3:00 PM', date: '2025-07-25', location: 'Tech Lab 1', students: 15, attendance: 'pending' }, ];
         const studentRoster = [ { id: 's1', name: 'Amelia Johnson' }, { id: 's2', name: 'Benjamin Carter' }, { id: 's3', name: 'Sophia Rodriguez' }, { id: 's4', name: 'Liam Goldberg' }, { id: 's5', name: 'Olivia Chen' }, { id: 's6', name: 'Noah Patel' }, ];
         
         // --- DOM ELEMENTS ---
-        const navLinks = { dashboard: document.getElementById('nav-dashboard'), moderation: document.getElementById('nav-moderation'), attendance: document.getElementById('nav-attendance'), calendar: document.getElementById('nav-calendar'),};
-        const views = { dashboard: document.getElementById('view-dashboard'), moderation: document.getElementById('view-moderation'), attendance: document.getElementById('view-attendance'), calendar: document.getElementById('view-calendar'),};
+        const navLinks = { dashboard: document.getElementById('nav-dashboard'), attendance: document.getElementById('nav-attendance'), calendar: document.getElementById('nav-calendar'),};
+        const views = { dashboard: document.getElementById('view-dashboard'), attendance: document.getElementById('view-attendance'), calendar: document.getElementById('view-calendar'),};
         const attendanceModal = document.getElementById('attendance-modal');
 
         // --- NAVIGATION LOGIC ---
         function switchView(viewName) {
-            Object.values(views).forEach(view => view.classList.add('hidden'));
+            Object.values(views).forEach(view => {
+                view.classList.add('hidden');
+            });
             Object.values(navLinks).forEach(link => link.classList.remove('active'));
+            
             views[viewName].classList.remove('hidden');
             navLinks[viewName].classList.add('active');
-        }
-        Object.keys(navLinks).forEach(key => { navLinks[key].addEventListener('click', (e) => { e.preventDefault(); switchView(key); }); });
 
-        // --- DATA PROCESSING & RENDERING ---
-        function getStudentModerationStats() {
-            const studentStats = {};
-            allModerationData.forEach(mod => {
-                if (!studentStats[mod.studentId]) { studentStats[mod.studentId] = { id: mod.studentId, name: mod.studentName, handle: mod.studentHandle, grade: mod.grade, approved: 0, pending: 0, rejected: 0, }; }
-                studentStats[mod.studentId][mod.status]++;
-            });
-            return Object.values(studentStats);
+            // Build the view's content
+            if (viewName === 'dashboard') buildDashboardView();
+            else if (viewName === 'attendance') buildAttendanceView();
+            else if (viewName === 'calendar') buildCalendarView();
+        }
+        
+        // --- HTML BUILDERS ---
+        function buildDashboardView() {
+            views.dashboard.innerHTML = `
+                <h1 class="text-3xl font-bold text-gray-900">Moderator Dashboard</h1>
+                <p class="text-gray-600 mt-1">Welcome back, John. Here's what's on your plate today.</p>
+                <div class="mt-8 flex justify-end">
+                    <div class="relative">
+                        <button onclick="toggleDropdown('dashboard-download-dropdown')" class="flex items-center space-x-2 bg-white border border-gray-300 px-4 py-2 rounded-lg text-sm font-semibold">
+                            <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
+                            <span>Download Report</span>
+                        </button>
+                        <div id="dashboard-download-dropdown" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg z-10 border">
+                            <div class="p-2 text-sm font-semibold text-gray-500 border-b">Download by timeframe</div>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">This Day</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">This Week</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">This Month</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">This Term</a>
+                             <div class="p-2 text-sm font-semibold text-gray-500 border-t mt-1">Download as</div>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">CSV</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">PDF</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4">Action Items</h2>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                        <div class="flex justify-between items-center">
+                            <h3 class="font-semibold text-lg">Pending Attendance</h3>
+                            <span id="pending-attendance-count" class="bg-red-100 text-red-800 text-sm font-bold px-2.5 py-1 rounded-full"></span>
+                        </div>
+                        <p class="text-sm text-gray-500 mt-1">Sessions from previous days that need attendance marked.</p>
+                        <div id="pending-attendance-list" class="mt-4 space-y-3"></div>
+                    </div>
+                </div>
+                <div class="mt-10">
+                    <h2 class="text-xl font-bold text-gray-900 mb-4">Upcoming Sessions</h2>
+                    <div id="upcoming-sessions-list" class="space-y-4"></div>
+                </div>`;
+            renderDashboard();
         }
 
+        function buildAttendanceView() {
+            views.attendance.innerHTML = `
+                <div class="flex justify-between items-center mb-8">
+                    <div class="flex items-center space-x-3">
+                        <h1 class="text-3xl font-bold text-gray-900">Sessions</h1>
+                        <span id="att-total-count" class="bg-gray-200 text-gray-800 text-sm font-semibold px-3 py-1 rounded-full"></span>
+                    </div>
+                     <div class="relative">
+                        <button onclick="toggleDropdown('attendance-download-dropdown')" class="flex items-center space-x-2 bg-white border border-gray-300 px-4 py-2 rounded-lg text-sm font-semibold">
+                            <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
+                            <span>Download Report</span>
+                        </button>
+                        <div id="attendance-download-dropdown" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg z-10 border">
+                            <div class="p-2 text-sm font-semibold text-gray-500 border-b">Download by timeframe</div>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">This Day</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">This Week</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">This Month</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">This Term</a>
+                             <div class="p-2 text-sm font-semibold text-gray-500 border-t mt-1">Download as</div>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">CSV</a>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">PDF</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border mb-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4">
+                        <div><label for="att-search-input" class="text-sm font-medium text-gray-700">Search Sessions</label><input type="text" id="att-search-input" placeholder="Search by title..." class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"></div>
+                        <div><label for="att-date-input" class="text-sm font-medium text-gray-700">Filter by Date</label><input type="date" id="att-date-input" class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 text-gray-500"></div>
+                        <div><label for="att-status-select" class="text-sm font-medium text-gray-700">Status</label><select id="att-status-select" class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"><option value="all">All Sessions</option><option value="pending">Pending Attendance</option><option value="completed">Completed</option></select></div>
+                    </div>
+                </div>
+                <div id="attendance-page-list" class="space-y-4"></div>`;
+            renderAttendancePage();
+            setupAttendanceFilters();
+        }
+
+        function buildCalendarView() {
+            views.calendar.innerHTML = `<div class="flex items-center justify-between mb-8"><div><h1 class="text-3xl font-bold text-gray-900" id="calendar-month-year"></h1><p class="text-gray-600 mt-1">A monthly overview of all CCA sessions.</p></div><div class="flex items-center space-x-2"><button id="prev-month-btn" class="p-2 rounded-lg hover:bg-gray-100"><svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"></path></svg></button><button id="next-month-btn" class="p-2 rounded-lg hover:bg-gray-100"><svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"></path></svg></button></div></div><div class="bg-white p-6 rounded-xl shadow-sm border"><div class="grid grid-cols-7 gap-px text-center text-sm font-semibold text-gray-600 mb-2"><div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div></div><div id="calendar-grid" class="grid grid-cols-7 gap-px"></div></div>`;
+            renderCalendar();
+            setupCalendarControls();
+        }
+
+        // --- RENDER FUNCTIONS (Populate content) ---
         function renderDashboard() {
             const pendingAttendanceData = allSessionsData.filter(s => s.attendance === 'pending' && new Date(s.date) < new Date('2025-07-18'));
-            const pendingModerationsData = allModerationData.filter(m => m.status === 'pending');
             const upcomingSessionsData = allSessionsData.filter(s => new Date(s.date) >= new Date('2025-07-18')).slice(0, 3).map(s => ({...s, day: new Date(s.date).toDateString() === new Date('2025-07-18').toDateString() ? 'Today' : 'Tomorrow'}));
             const paCount = document.getElementById('pending-attendance-count');
             const paList = document.getElementById('pending-attendance-list');
@@ -248,37 +267,10 @@
             paList.innerHTML = '';
             if (pendingAttendanceData.length === 0) paList.innerHTML = `<p class="text-sm text-gray-500 text-center py-4">No pending attendance.</p>`;
             else pendingAttendanceData.forEach(item => { paList.innerHTML += `<div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg"><div><p class="font-medium text-sm text-gray-800">${item.name}</p><p class="text-xs text-gray-500">${new Date(item.date).toLocaleDateString()}, ${item.time}</p></div><button class="text-sm font-semibold text-purple-700 hover:text-purple-900">Mark Now</button></div>`; });
-            const pmCount = document.getElementById('pending-moderations-count');
-            const pmList = document.getElementById('pending-moderations-list');
-            pmCount.textContent = pendingModerationsData.length;
-            pmList.innerHTML = '';
-            if (pendingModerationsData.length === 0) pmList.innerHTML = `<p class="text-sm text-gray-500 text-center py-4">No pending moderations.</p>`;
-            else pendingModerationsData.forEach(item => { pmList.innerHTML += `<div class="flex items-center justify-between bg-gray-50 p-3 rounded-lg"><div><p class="font-medium text-sm text-gray-800">${item.activity}</p><p class="text-xs text-gray-500">Submitted by ${item.studentName}</p></div><button class="text-sm font-semibold text-purple-700 hover:text-purple-900">Review</button></div>`; });
             const usList = document.getElementById('upcoming-sessions-list');
             usList.innerHTML = '';
             if (upcomingSessionsData.length === 0) usList.innerHTML = `<p class="text-sm text-gray-500 text-center py-8 bg-white rounded-xl border">No upcoming sessions.</p>`;
             else upcomingSessionsData.forEach(session => { usList.innerHTML += `<div class="action-card bg-white p-5 rounded-xl shadow-sm border flex items-center justify-between gap-4 transition-all"><div class="flex items-center gap-4"><div class="bg-purple-100 text-purple-700 rounded-lg p-3 flex flex-col items-center justify-center w-16 h-16"><span class="font-bold text-lg">${session.time.split(':')[0]}</span><span class="text-xs font-medium">${session.time.split(' ')[1]}</span></div><div><p class="font-bold text-lg text-gray-900">${session.name}</p><p class="text-sm text-gray-500 mt-1"><span class="font-semibold">${session.day}</span> &bull; ${session.location}</p></div></div><button class="flex-shrink-0 bg-white text-gray-800 px-4 py-2 rounded-lg font-semibold text-sm border border-gray-300 hover:bg-gray-100 transition-colors">View Details</button></div>`; });
-        }
-
-        function renderModerationPage(filter = 'all', searchTerm = '') {
-            const studentStats = getStudentModerationStats();
-            const lowerCaseSearchTerm = searchTerm.toLowerCase();
-            const filteredStudents = studentStats.filter(student => {
-                const matchesFilter = (filter === 'all') || (filter === 'pending' && student.pending > 0);
-                const matchesSearch = student.name.toLowerCase().includes(lowerCaseSearchTerm);
-                return matchesFilter && matchesSearch;
-            });
-            document.getElementById('mod-stat-pending').textContent = allModerationData.filter(m => m.status === 'pending').length;
-            document.getElementById('mod-stat-approved').textContent = allModerationData.filter(m => m.status === 'approved').length;
-            document.getElementById('mod-stat-rejected').textContent = allModerationData.filter(m => m.status === 'rejected').length;
-            document.getElementById('mod-stat-total').textContent = allModerationData.length;
-            const grid = document.getElementById('moderation-student-grid');
-            grid.innerHTML = '';
-            filteredStudents.forEach(student => {
-                const avatarColor = 'bg-gray-200';
-                const avatarInitial = student.name.split(' ').map(n => n[0]).join('');
-                grid.innerHTML += `<div class="bg-white rounded-xl shadow-sm border p-5 flex flex-col space-y-4"><div class="flex items-center space-x-4"><div class="flex-shrink-0 h-12 w-12 ${avatarColor} rounded-full flex items-center justify-center text-gray-700 font-bold text-lg">${avatarInitial}</div><div><p class="font-bold text-lg text-gray-900">${student.name}</p><p class="text-sm text-gray-500">${student.handle} &bull; ${student.grade}</p></div></div><div class="flex-grow pt-4 border-t grid grid-cols-2 gap-4"><div class="text-center"><p class="text-sm text-gray-500">Approved</p><p class="font-bold text-xl text-green-600">${student.approved}</p></div><div class="text-center"><p class="text-sm text-gray-500">Pending</p><p class="font-bold text-xl text-yellow-600">${student.pending}</p></div></div><div class="pt-4"><button class="w-full flex items-center justify-center space-x-2 bg-purple-600 px-4 py-2.5 text-sm font-semibold text-white rounded-lg shadow-sm hover:bg-purple-700"><span>Moderate</span></button></div></div>`;
-            });
         }
         
         function renderAttendancePage() {
@@ -313,8 +305,9 @@
         function renderCalendar() {
             const year = currentDate.getFullYear();
             const month = currentDate.getMonth();
-            document.getElementById('calendar-month-year').textContent = `${currentDate.toLocaleString('default', { month: 'long' })} ${year}`;
+            const calendarMonthYear = document.getElementById('calendar-month-year');
             const grid = document.getElementById('calendar-grid');
+            calendarMonthYear.textContent = `${currentDate.toLocaleString('default', { month: 'long' })} ${year}`;
             grid.innerHTML = '';
             const firstDay = new Date(year, month, 1).getDay();
             const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -331,14 +324,6 @@
         }
 
         // --- FILTER & CONTROL SETUP ---
-        function setupModerationFilters() {
-            const modFilterAll = document.getElementById('mod-filter-all');
-            const modFilterPending = document.getElementById('mod-filter-pending');
-            const modSearchInput = document.getElementById('mod-search-input');
-            modFilterAll.addEventListener('click', () => { modFilterAll.classList.add('active'); modFilterPending.classList.remove('active'); renderModerationPage('all', modSearchInput.value); });
-            modFilterPending.addEventListener('click', () => { modFilterPending.classList.add('active'); modFilterAll.classList.remove('active'); renderModerationPage('pending', modSearchInput.value); });
-            modSearchInput.addEventListener('input', () => { const currentFilter = modFilterPending.classList.contains('active') ? 'pending' : 'all'; renderModerationPage(currentFilter, modSearchInput.value); });
-        }
         function setupAttendanceFilters() {
             const attSearchInput = document.getElementById('att-search-input');
             const attDateInput = document.getElementById('att-date-input');
@@ -356,11 +341,41 @@
             document.getElementById('modal-session-details').textContent = `${new Date(session.date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })} at ${session.time}`;
             const studentListEl = document.getElementById('student-list');
             studentListEl.innerHTML = '';
-            studentRoster.forEach(student => { studentListEl.innerHTML += `<div class="flex items-center justify-between p-3 border-b border-gray-100"><div class="flex items-center"><div class="w-8 h-8 bg-gray-200 rounded-full mr-3"></div><span class="font-medium text-sm">${student.name}</span></div><div class="flex space-x-1">${['Present', 'Absent', 'Late', 'Excused'].map(status => `<button class="px-3 py-1 text-xs font-semibold bg-gray-100 hover:bg-gray-200 rounded-md">${status}</button>`).join('')}</div></div>`; });
+            studentRoster.forEach(student => {
+                const studentRow = document.createElement('div');
+                studentRow.className = 'student-row flex items-center justify-between p-3 border-b border-gray-100';
+                studentRow.innerHTML = `<div class="flex items-center"><div class="w-8 h-8 bg-gray-200 rounded-full mr-3 flex-shrink-0"></div><span class="font-medium text-sm">${student.name}</span></div>
+                    <div class="flex space-x-1">
+                        <button class="status-btn px-3 py-1 text-base font-semibold bg-gray-100 hover:bg-gray-200 rounded-md" data-status="present">Present</button>
+                        <button class="status-btn px-3 py-1 text-base font-semibold bg-gray-100 hover:bg-gray-200 rounded-md" data-status="absent">Absent</button>
+                        <button class="status-btn px-3 py-1 text-base font-semibold bg-gray-100 hover:bg-gray-200 rounded-md" data-status="late">Late</button>
+                        <button class="status-btn px-3 py-1 text-base font-semibold bg-gray-100 hover:bg-gray-200 rounded-md" data-status="excused">Excused</button>
+                    </div>`;
+                studentListEl.appendChild(studentRow);
+            });
+            
+            studentListEl.querySelectorAll('.status-btn').forEach(btn => {
+                btn.addEventListener('click', handleStatusClick);
+            });
+
             attendanceModal.classList.remove('hidden');
             setTimeout(() => attendanceModal.querySelector('.transform').classList.remove('scale-95'), 10);
             switchModalTab('manual');
         }
+
+        function handleStatusClick(event) {
+            const clickedButton = event.currentTarget;
+            const row = clickedButton.closest('.student-row');
+            const status = clickedButton.dataset.status;
+            row.querySelectorAll('.status-btn').forEach(btn => {
+                btn.classList.remove('status-btn-active-present', 'status-btn-active-absent', 'status-btn-active-late', 'status-btn-active-excused');
+            });
+            if (status === 'present') clickedButton.classList.add('status-btn-active-present');
+            else if (status === 'absent') clickedButton.classList.add('status-btn-active-absent');
+            else if (status === 'late') clickedButton.classList.add('status-btn-active-late');
+            else if (status === 'excused') clickedButton.classList.add('status-btn-active-excused');
+        }
+
         function closeAttendanceModal() {
             attendanceModal.querySelector('.transform').classList.add('scale-95');
             setTimeout(() => attendanceModal.classList.add('hidden'), 200);
@@ -382,6 +397,10 @@
             container.innerHTML = '';
             new QRCode(container, { text: `SESSION_ID:${Math.ceil(Math.random() * 1000)}`, width: 256, height: 256, colorDark : "#000000", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.H });
         }
+
+        function toggleDropdown(id) {
+            document.getElementById(id).classList.toggle('hidden');
+        }
         
         // --- INITIALIZATION ---
         window.onload = () => {
@@ -389,20 +408,15 @@
             document.getElementById('manual-entry-tab').addEventListener('click', () => switchModalTab('manual'));
             document.getElementById('qr-code-tab').addEventListener('click', () => switchModalTab('qr'));
 
-            // Initial render of all pages
-            renderDashboard();
-            renderModerationPage();
-            renderAttendancePage();
-            renderCalendar();
-            
-            // Setup event listeners for filters
-            setupModerationFilters();
-            setupAttendanceFilters();
-            setupCalendarControls();
+            Object.keys(navLinks).forEach(key => { 
+                navLinks[key].addEventListener('click', (e) => { 
+                    e.preventDefault(); 
+                    switchView(key); 
+                }); 
+            });
 
             // Set the initial view
             switchView('dashboard');
-            document.getElementById('mod-filter-all').classList.add('active');
         };
     </script>
 
