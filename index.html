@@ -183,7 +183,7 @@
                     <div class="relative">
                         <button onclick="toggleDropdown('dashboard-download-dropdown')" class="flex items-center space-x-2 bg-white border border-gray-300 px-4 py-2 rounded-lg text-sm font-semibold">
                             <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" /></svg>
-                            <span>Download Report</span>
+                            <span>Download Attendance</span>
                         </button>
                         <div id="dashboard-download-dropdown" class="hidden absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg z-10 border">
                             <div class="p-2 text-sm font-semibold text-gray-500 border-b">Download by timeframe</div>
@@ -243,7 +243,7 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4">
                         <div><label for="att-search-input" class="text-sm font-medium text-gray-700">Search Sessions</label><input type="text" id="att-search-input" placeholder="Search by title..." class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"></div>
                         <div><label for="att-date-input" class="text-sm font-medium text-gray-700">Filter by Date</label><input type="date" id="att-date-input" class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500 text-gray-500"></div>
-                        <div><label for="att-status-select" class="text-sm font-medium text-gray-700">Status</label><select id="att-status-select" class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"><option value="all">All Sessions</option><option value="pending">Pending Attendance</option><option value="completed">Completed</option></select></div>
+                        <div><label for="att-status-select" class="text-sm font-medium text-gray-700">Status</label><select id="att-status-select" class="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-purple-500 focus:border-purple-500"><option value="all">Current Sessions</option><option value="pending">Past Sessions</option><option value="completed">Future Sessions</option></select></div>
                     </div>
                 </div>
                 <div id="attendance-page-list" class="space-y-4"></div>`;
